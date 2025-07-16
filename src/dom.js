@@ -2,6 +2,9 @@ export class DOM {
   constructor() {}
 
   createGrid(gridElement, isComputer = false, handleClick = null) {
+    // Clear any existing grid cells
+    gridElement.innerHTML = "";
+
     for (let i = 0; i < 100; i++) {
       const cell = document.createElement("div");
       cell.classList.add("cell");
@@ -13,7 +16,13 @@ export class DOM {
       cell.dataset.y = y;
 
       if (isComputer && typeof handleClick === "function") {
-        cell.addEventListener("click", (e) => {
+        cell.addEventListener("click", () => {
+          handleClick(x, y, cell);
+        });
+      }
+
+      if (!isComputer && typeof handleClick === "function") {
+        cell.addEventListener("click", () => {
           handleClick(x, y, cell);
         });
       }
@@ -38,10 +47,8 @@ export class DOM {
         const playerGrid = document.getElementById("player-grid");
         const computerGrid = document.getElementById("computer-grid");
 
-        this.createGrid(playerGrid); 
-
-        
-        startCallback(playerName, computerGrid);
+        // ⚠️ Don't create grid here — we’ll do it in game logic
+        startCallback(playerName, computerGrid, playerGrid);
       }
     });
   }

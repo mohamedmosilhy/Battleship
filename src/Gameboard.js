@@ -11,6 +11,23 @@ export class Gameboard {
     this.ships = [];
   }
 
+  canPlaceShip(x, y, direction, length) {
+    if (direction === "x") {
+      if (x + length > 10) return false;
+      for (let i = 0; i < length; i++) {
+        if (this.grid[y][x + i].ship) return false;
+      }
+    } else if (direction === "y") {
+      if (y + length > 10) return false;
+      for (let i = 0; i < length; i++) {
+        if (this.grid[y + i][x].ship) return false;
+      }
+    } else {
+      return false;
+    }
+    return true;
+  }
+
   placeShip(x, y, direction, shapeLength) {
     let ship = new Ship(shapeLength);
     const length = ship.length;

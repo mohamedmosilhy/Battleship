@@ -10,6 +10,10 @@ export class Player {
     }
   }
 
+  canPlaceShip(x, y, length, direction) {
+    return this.gameboard.canPlaceShip(x, y, direction, length);
+  }
+
   attack(x, y, boardSize = 10) {
     if (this.isComputer) {
       const { x: randX, y: randY } = this.getRandomLegalMove(boardSize);
@@ -21,11 +25,23 @@ export class Player {
 
   placeShip(x, y, shipLength, direction, boardSize = 10) {
     if (this.isComputer) {
-      const { x: randX, y: randY } = this.getRandomLegalMove(boardSize);
       const directions = ["x", "y"];
-      const randDirection =
-        directions[Math.floor(Math.random() * directions.length)];
-      this.gameboard.placeShip(randX, randY, randDirection, shipLength);
+      let placed = false;
+
+      while (!placed) {
+        const dir = directions[Math.floor(Math.random() * 2)];
+        const rx = Math.floor(
+          Math.random() * (dir === "x" ? boardSize - shipLength : boardSize)
+        );
+        const ry = Math.floor(
+          Math.random() * (dir === "y" ? boardSize - shipLength : boardSize)
+        );
+
+        if (this.canPlaceShip(rx, ry, shipLength, dir)) {
+          this.gameboard.placeShip(rx, ry, dir, shipLength);
+          placed = true;
+        }
+      }
     } else {
       this.gameboard.placeShip(x, y, direction, shipLength);
     }

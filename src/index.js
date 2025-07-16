@@ -9,24 +9,6 @@ function createPlayers(name) {
   return { human, computer };
 }
 
-function placeShips(player, ships) {
-  ships.forEach(({ x, y, length, direction }) => {
-    player.placeShip(x, y, length, direction);
-
-    if (!player.isComputer) {
-      // Show ship locations for the human player
-      for (let i = 0; i < length; i++) {
-        const cx = direction === "x" ? x + i : x;
-        const cy = direction === "y" ? y + i : y;
-        const cell = document.querySelector(
-          `#player-grid .cell[data-x="${cx}"][data-y="${cy}"]`
-        );
-        if (cell) cell.classList.add("ship");
-      }
-    }
-  });
-}
-
 function markSunkShip(ship, board, gridId) {
   for (let y = 0; y < board.grid.length; y++) {
     for (let x = 0; x < board.grid[y].length; x++) {
@@ -41,17 +23,85 @@ function markSunkShip(ship, board, gridId) {
   }
 }
 
+function randomlyPlaceShips(player, shipLengths) {
+  const directions = ["x", "y"];
+  for (const length of shipLengths) {
+    let placed = false;
+    while (!placed) {
+      const direction = directions[Math.floor(Math.random() * 2)];
+      const x = Math.floor(
+        Math.random() * (direction === "x" ? 10 - length : 10)
+      );
+      const y = Math.floor(
+        Math.random() * (direction === "y" ? 10 - length : 10)
+      );
+
+      if (player.canPlaceShip(x, y, length, direction)) {
+        player.placeShip(x, y, length, direction);
+        placed = true;
+      }
+    }
+  }
+}
+
 dom.initializeGrids((playerName, computerGrid) => {
   const { human, computer } = createPlayers(playerName);
 
-  const shipConfigs = [
-    { x: 0, y: 0, length: 3, direction: "x" },
-    { x: 2, y: 2, length: 2, direction: "y" },
-    { x: 5, y: 5, length: 2, direction: "x" },
-  ];
+  const shipLengths = [5, 4, 3, 3, 2]; // Classic Battleship sizes
+  let currentShipIndex = 0;
+  let placingPhase = true;
+  let currentDirection = "x";
 
-  placeShips(human, shipConfigs);
-  placeShips(computer, shipConfigs);
+  // Allow R key to rotate ship
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "r" || e.key === "R") {
+      currentDirection = currentDirection === "x" ? "y" : "x";
+      dom.createMessage(`Direction: ${currentDirection.toUpperCase()}`);
+    }
+  });
+
+  // Create player grid for ship placement
+  const playerGrid = document.querySelector("#player-grid");
+  dom.createGrid(playerGrid, false, (x, y) => {
+    if (!placingPhase) return;
+
+    const length = shipLengths[currentShipIndex];
+    if (human.canPlaceShip(x, y, length, currentDirection)) {
+      human.placeShip(x, y, length, currentDirection);
+
+      // Show placed ship
+      for (let i = 0; i < length; i++) {
+        const cx = currentDirection === "x" ? x + i : x;
+        const cy = currentDirection === "y" ? y + i : y;
+        const cell = document.querySelector(
+          `#player-grid .cell[data-x="${cx}"][data-y="${cy}"]`
+        );
+        if (cell) cell.classList.add("ship");
+      }
+
+      currentShipIndex++;
+      if (currentShipIndex === shipLengths.length) {
+        placingPhase = false;
+        dom.createMessage("✅ All ships placed. Game starts!");
+
+        randomlyPlaceShips(computer, shipLengths);
+
+        // Now enable attacking on the computer grid
+        dom.createGrid(computerGrid, true, handleHumanAttack);
+      } else {
+        dom.createMessage(
+          `Place ship of length ${shipLengths[currentShipIndex]}`
+        );
+      }
+    } else {
+      dom.createMessage("⚠️ Invalid position. Try again.");
+    }
+  });
+
+  // Initial message for ship placement instructions
+  dom.createMessage(
+    "🛠 Place your ships on the grid. Press [R] to rotate direction (X/Y)."
+  );
 
   function handleHumanAttack(x, y, cell) {
     const alreadyAttacked =
@@ -109,7 +159,4 @@ dom.initializeGrids((playerName, computerGrid) => {
       dom.createMessage("💥 Computer wins!");
     }
   }
-
-  // Create clickable computer grid
-  dom.createGrid(computerGrid, true, handleHumanAttack);
 });
