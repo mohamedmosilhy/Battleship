@@ -1,0 +1,185 @@
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  font-size: 62.5%; /* 1rem = 10px for easier math */
+}
+
+body {
+  height: 100vh;
+  font-family: "Rajdhani", sans-serif;
+  font-weight: 500;
+  background-color: #0a1f2c;
+  color: #e0f7fa;
+  padding: 2rem;
+  overflow: hidden;
+}
+
+/* Intro container */
+.intro-page {
+  min-height: 100vh;
+  width: 100%;
+  max-width: 80rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  text-align: center;
+}
+
+/* Heading styles */
+.heading-text h1 {
+  font-size: clamp(4rem, 10vw, 8rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: 0.2rem;
+}
+
+.heading-text p {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ffeb3b;
+  margin-top: 1rem;
+}
+
+/* Start game form */
+.start-game {
+  width: 100%;
+  max-width: 32rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  margin-top: 1rem;
+}
+
+.start-game input {
+  padding: 1.2rem;
+  background-color: transparent;
+  color: white;
+  border: 0.1rem solid white;
+  border-radius: 0.6rem;
+  font-size: 1.6rem;
+  text-align: center;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.start-game input:focus {
+  outline: none;
+  border-color: #00bcd4;
+  box-shadow: 0 0 0.8rem #00bcd4;
+}
+
+.start-game button {
+  background-color: #00bcd4;
+  color: #ffffff;
+  font-size: 1.8rem;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 0.6rem;
+  cursor: pointer;
+  font-weight: bold;
+  letter-spacing: 0.05rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 0.4rem 1.2rem rgba(0, 188, 212, 0.2);
+}
+
+.start-game button:hover {
+  filter: brightness(1.2);
+  transform: scale(1.05);
+}
+
+/* Game container */
+.game-container {
+  width: 100%;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header {
+  font-size: 5rem;
+  font-weight: 700;
+  letter-spacing: 0.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.message {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+}
+
+.grids {
+  display: flex;
+  justify-content: center;
+  gap: 6rem;
+  flex-wrap: wrap;
+}
+
+/* Grid wrapper */
+.left-grid,
+.right-grid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Name label */
+.name {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #00bcd4;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+}
+
+/* Grid */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(10, 4rem);
+  grid-template-rows: repeat(10, 4rem);
+  gap: 0.3rem;
+  background-color: #132f45;
+  padding: 0.6rem;
+  border: 0.2rem solid #00bcd4;
+  border-radius: 0.8rem;
+}
+
+/* Cells */
+.cell {
+  width: 4rem;
+  height: 4rem;
+  background-color: #1a3a57;
+  border: 0.1rem solid #0e273b;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+/* Hover effect */
+#computer-grid .cell:hover {
+  background-color: #00bcd4;
+}
+
+/* Game states */
+.cell.ship {
+  background-color: #4caf50;
+}
+
+.cell.hit {
+  background-color: #f44336;
+}
+
+.cell.miss {
+  background-color: #607d8b;
+}
+
+.cell.sunk {
+  background-color: #8b0000;
+}
