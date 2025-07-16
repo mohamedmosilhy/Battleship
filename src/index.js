@@ -1,5 +1,6 @@
 import { DOM } from "./dom.js";
 import { Player } from "./Player.js";
+import "../styles/style.css";
 
 const dom = new DOM();
 
