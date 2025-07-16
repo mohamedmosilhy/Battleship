@@ -1,7 +1,7 @@
 export class DOM {
   constructor() {}
 
-  createGrid(gridElement) {
+  createGrid(gridElement, isComputer = false, handleClick = null) {
     for (let i = 0; i < 100; i++) {
       const cell = document.createElement("div");
       cell.classList.add("cell");
@@ -12,30 +12,42 @@ export class DOM {
       cell.dataset.x = x;
       cell.dataset.y = y;
 
+      if (isComputer && typeof handleClick === "function") {
+        cell.addEventListener("click", (e) => {
+          handleClick(x, y, cell);
+        });
+      }
+
       gridElement.appendChild(cell);
     }
   }
 
-  initializeGrids() {
+  initializeGrids(startCallback) {
     const gameContainer = document.querySelector(".game-container");
     const startGame = document.querySelector(".intro-page");
-    let playerName = "";
-    const name = document.querySelector(".right-grid .name ");
+    const nameDisplay = document.querySelector(".right-grid .name");
 
     startGame.addEventListener("submit", (e) => {
       e.preventDefault();
-      playerName = document.querySelector(".player-name").value;
+      const playerName = document.querySelector(".player-name").value;
       if (playerName.trim()) {
         startGame.style.display = "none";
         gameContainer.style.display = "flex";
-        name.textContent = playerName;
+        nameDisplay.textContent = playerName;
+
         const playerGrid = document.getElementById("player-grid");
         const computerGrid = document.getElementById("computer-grid");
-        this.createGrid(playerGrid);
-        this.createGrid(computerGrid);
+
+        this.createGrid(playerGrid); 
+
+        
+        startCallback(playerName, computerGrid);
       }
     });
+  }
 
-    return playerName;
+  createMessage(msg) {
+    const message = document.querySelector(".message");
+    message.textContent = `[ ${msg} ]`;
   }
 }
