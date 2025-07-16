@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8" />
+        <title>Battleship</title>
+        <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;700&display=swap" rel="stylesheet">
+        <script defer src="bundle.js"></script>
+    <script defer src="bundle.js"></script></head>
+
+    <body>
+        <!-- Intro Page -->
+        <div class="intro-page">
+            <div class="heading-text">
+                <p>THE CLASSICAL NAVAL COMBAT GAME</p>
+                <h1>BATTLESHIP</h1>
+            </div>
+            <form class="start-game">
+                <input class="player-name" type="text" placeholder="Enter Your Name." required>
+                <button type="submit" class="start-btn">Start Game</button>
+            </form>
+        </div>
+
+        <!-- Game Page -->
+        <div class="game-container">
+            <h1 class="header">BATTLESHIP</h1>
+            <div class="message">[ Waiting for Player ]</div>
+
+            <!-- Grids Wrapper -->
+            <div class="grids">
+                <!-- Left: Computer -->
+                <div class="left-grid">
+                    <div class="name">Computer</div>
+                    <div class="grid" id="computer-grid"></div>
+                </div>
+
+                <!-- Right: Player -->
+                <div class="right-grid">
+                    <div class="name">Mohamed</div>
+                    <div class="grid" id="player-grid"></div>
+                    <!-- 🔁 Direction Toggle Button Will Be Appended Here -->
+                </div>
+            </div>
+        </div>
+
+
+    </body>
+
+</html>
